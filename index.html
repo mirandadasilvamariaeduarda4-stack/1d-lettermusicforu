@@ -23,13 +23,11 @@
             --text-muted: #9e9e9e;
             --border-subtle: rgba(255, 255, 255, 0.1);
             
-            /* Variáveis da Folha de Papel Bege com recortes orgânicos */
             --paper-bg: #f4ecdc;
             --paper-text: #2c241d;
             --paper-shadow: rgba(0, 0, 0, 0.7);
         }
 
-        /* Importação de fontes estéticas (Rock Salt para títulos e Special Elite para cartas) */
         @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&family=Special+Elite&display=swap');
 
         body, html {
@@ -41,7 +39,6 @@
             font-family: 'Special Elite', monospace;
         }
 
-        /* Película de grão analógico cinematográfica */
         .film-grain {
             position: fixed;
             top: 0; left: 0;
@@ -52,7 +49,7 @@
         }
 
         /* =================================================================
-           SISTEMA DE PÁGINAS E TRANSIÇÕES FLUIDAS (Blur, Fade & Zoom)
+           SISTEMA DE PÁGINAS E TRANSIÇÕES FLUIDAS
            =================================================================== */
         .page {
             position: absolute;
@@ -89,7 +86,7 @@
         }
 
         /* =================================================================
-           BOTÃO DE VOLTAR (Seta Estilizada)
+           BOTÃO DE VOLTAR
            =================================================================== */
         .back-page-btn {
             position: absolute;
@@ -215,16 +212,18 @@
         .foto-5 { top: 39%; right: 1%; transform: rotate(-6deg); }
         .foto-6 { bottom: 8%; right: 3%; transform: rotate(7deg); }
 
+        /* Fotos dos membros - menores e mais próximas da carta */
         .decora-img.membro-1, 
         .decora-img.membro-2 {
             position: absolute;
-            width: 260px;
-            height: 420px;
+            width: 160px;
+            height: 240px;
             background: transparent;
             padding: 0;
-            box-shadow: none;
-            z-index: 3;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 2;
             display: none;
+            border-radius: 8px;
         }
 
         .decora-img.membro-1 img, 
@@ -232,27 +231,40 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
             filter: grayscale(10%) contrast(105%);
         }
 
+        /* Fotos mais próximas da carta */
         .membro-1 {
-            top: 22%;  
-            left: 14%;
+            top: 28%;  
+            left: 12%; /* Antes era 8% - mais perto da carta */
             transform: rotate(-3deg);
         }
 
         .membro-2 {
-            top: 22%;  
-            right: 14%;
+            top: 28%;  
+            right: 12%; /* Antes era 8% - mais perto da carta */
             transform: rotate(3deg);
         }
 
+        /* Exibe as fotos dos membros em telas maiores */
         @media (min-width: 1100px) {
             .decora-img.membro-1,
             .decora-img.membro-2 {
                 display: block;
             }
+        }
+
+        /* Ajuste para telas muito grandes */
+        @media (min-width: 1600px) {
+            .decora-img.membro-1,
+            .decora-img.membro-2 {
+                width: 200px;
+                height: 300px;
+            }
+            .membro-1 { left: 16%; }
+            .membro-2 { right: 16%; }
         }
 
         .letter-wrapper {
@@ -261,7 +273,7 @@
             max-width: 700px;
             height: 58vh;
             margin-bottom: 20px;
-            z-index: 2;
+            z-index: 3;
         }
 
         .letter-container {
@@ -379,8 +391,11 @@
             filter: contrast(105%) saturate(90%);
         }
 
+        /* =================================================================
+           RESPONSIVIDADE
+           =================================================================== */
         @media (min-width: 950px) {
-            .decora-img {
+            .decora-img:not(.membro-1):not(.membro-2) {
                 display: block;
             }
         }
@@ -392,6 +407,25 @@
             .letter-container { padding: 30px 20px; border-radius: 30px 10px 30px 10px; }
             .image-showcase { width: 90vw; height: 38vh; }
             .back-page-btn { top: 20px; left: 20px; font-size: 0.75rem; }
+        }
+
+        @media (max-width: 480px) {
+            .letter-wrapper { height: 45vh; }
+            .letter-container { padding: 20px 15px; }
+            .letter-content { font-size: 0.85rem; line-height: 1.7; }
+            .next-page-btn { padding: 10px 18px; font-size: 0.65rem; margin: 20px auto 5px auto; }
+            .image-showcase { height: 35vh; }
+            .player-btn { font-size: 1rem; width: 28px; height: 28px; }
+            .audio-player-container { padding: 8px 12px; gap: 8px; width: 90%; justify-content: center; }
+            .volume-control input[type="range"] { width: 50px; }
+            .volume-control { font-size: 0.7rem; gap: 4px; }
+            .back-page-btn { top: 15px; left: 15px; font-size: 0.7rem; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 20px; }
+        }
+
+        /* Ajuste para telas entre 1100px e 1300px */
+        @media (min-width: 1100px) and (max-width: 1300px) {
+            .membro-1 { left: 10%; }
+            .membro-2 { right: 10%; }
         }
     </style>
 </head>
@@ -416,13 +450,14 @@
     </section>
 
     <!-- ================================================================= -->
-    <!-- PÁGINA 2: A CARTA, PLAYER 1 E AS 4 FOTOS DECORATIVAS              -->
+    <!-- PÁGINA 2: A CARTA, PLAYER 1 E AS FOTOS DECORATIVAS               -->
     <!-- ================================================================= -->
     <section id="page2" class="page">
         <button class="back-page-btn" id="backToPage1">
             &larr; Voltar
         </button>
 
+        <!-- Fotos decorativas (z-index: 1) -->
         <div class="decora-img foto-1">
             <img src="foto1.jpg" alt="Decoração 1">
         </div>
@@ -442,6 +477,7 @@
             <img src="foto6.jpg" alt="Decoração 6">
         </div>
         
+        <!-- Fotos dos membros (z-index: 2) - mais próximas da carta -->
         <div class="decora-img membro-1">
             <img src="membro1.jpeg" alt="Membro 1">
         </div>
@@ -449,6 +485,7 @@
             <img src="membro2.jpeg" alt="Membro 2">
         </div>
       
+        <!-- Carta (z-index: 3) -->
         <div class="letter-wrapper">
             <div class="letter-container">
                 <div class="letter-content" id="letterText">Oii Minha Ruiva
@@ -471,11 +508,11 @@ Aprendi que tem alguém esperando pra ouvir minha voz. Aprendi que tem alguém q
 
 Você tem os olhos mais lindos que já vi. O sorriso bobo mais apaixonante. O olhar mais cativante. E a voz que faz meu coração errar as batidas – como se ele esquecesse como funciona só de ouvir você falar. "You're insecure, don't know what for, you're turning heads when you walk through the door" – mas você nem precisa fazer esforço, porque você já é a pessoa mais incrível que eu já conheci. Você é a música que eu quero ouvir em loop, o filme que eu quero assistir todo dia, o livro que eu quero reler até decorar cada página.
 
-Tenho orgulho de chamar você de minha namorada. Me sinto sortuda todos os dias por ter você ao meu lado – e olha que eu nunca fui de acreditar em sorte, mas você me fez acreditar que o acaso pode ter a mão mais cuidadosa do mundo. Você é inteligente, taletosa, intensa, profunda, interessante, cativante e se tornou meu sinônimo de paz. "If you're lost, just look for me and you'll find me in the region of the summer stars" – porque é pra onde você me leva toda vez que eu olho nos seus olhos: pra um lugar onde tudo faz sentido, onde o tempo para, onde o mundo desaparece e só existe você.
+Tenho orgulho de chamar você de minha namorada. Me sinto sortuda todos os dias por ter você ao meu lado – e olha que eu nunca fui de acreditar em sorte, mas você me fez acreditar que o acaso pode ter a mão mais cuidadosa do mundo. Você é inteligente, talentosa, intensa, profunda, interessante, cativante e se tornou meu sinônimo de paz. "If you're lost, just look for me and you'll find me in the region of the summer stars" – porque é pra onde você me leva toda vez que eu olho nos seus olhos: pra um lugar onde tudo faz sentido, onde o tempo para, onde o mundo desaparece e só existe você.
 
 Eu quero que você saiba que você é o meu "something great". Minha história favorita. Minha música preferida. O meu "finally" depois de tanto "maybe". Você é a resposta que eu passei anos procurando sem saber qual era a pergunta. Eu te amo de verdade – com todas as letras, com todos os versos, com todas as batidas do meu coração. Eu te amo de um jeito que eu nunca soube que era possível amar alguém. "I love you more than words can say" – e olha que eu tô tentando com todas as palavras do mundo, mas ainda assim parece pouco.
 
-E se um dia você duvidar, se um dia o medo bater na sua porta, se um dia você achar que não é suficiente: lembre-se de mim. Lembre-se de que pra minY você é tudo. Lembre-se de que você é a primeira pessoa que me fez querer ficar. A primeira que me fez acreditar que o amor não precisa doer. Lembre-se de que você é a minha paz, o meu lar, a minha canção. "That's what makes you beautiful" – e não é a aparência, não é o cabelo ruivo, não é o sorriso – é você. É a sua alma. É o jeito que você me olha. É o jeito que você me faz sentir que eu finalmente cheguei em casa.
+E se um dia você duvidar, se um dia o medo bater na sua porta, se um dia você achar que não é suficiente: lembre-se de mim. Lembre-se de que pra mim você é tudo. Lembre-se de que você é a primeira pessoa que me fez querer ficar. A primeira que me fez acreditar que o amor não precisa doer. Lembre-se de que você é a minha paz, o meu lar, a minha canção. "That's what makes you beautiful" – e não é a aparência, não é o cabelo ruivo, não é o sorriso – é você. É a sua alma. É o jeito que você me olha. É o jeito que você me faz sentir que eu finalmente cheguei em casa.
 
 Com todo o meu amor,
 Sua. 🖤</div>
@@ -554,7 +591,6 @@ Sua. 🖤</div>
                 }, 500);
             }
 
-            // Página 1 -> Página 2
             openBtn.addEventListener('click', () => {
                 switchPage(page1, page2);
                 musica1.play().then(() => {
@@ -564,7 +600,6 @@ Sua. 🖤</div>
                 });
             });
 
-            // Página 2 -> Página 1 (Voltar)
             backToPage1.addEventListener('click', () => {
                 musica1.pause();
                 musica1.currentTime = 0;
@@ -572,7 +607,6 @@ Sua. 🖤</div>
                 switchPage(page2, page1);
             });
 
-            // Página 2 -> Página 3
             goToPage3.addEventListener('click', () => {
                 musica1.pause();
                 musica1.currentTime = 0;
@@ -587,7 +621,6 @@ Sua. 🖤</div>
                 });
             });
 
-            // Página 3 -> Página 2 (Voltar)
             backToPage2.addEventListener('click', () => {
                 musica2.pause();
                 musica2.currentTime = 0;
@@ -602,7 +635,6 @@ Sua. 🖤</div>
                 });
             });
 
-            // Controles de Áudio 1
             const playPause1 = document.getElementById('playPause1');
             const volume1 = document.getElementById('volume1');
 
@@ -620,7 +652,6 @@ Sua. 🖤</div>
                 musica1.volume = e.target.value;
             });
 
-            // Controles de Áudio 2
             const playPause2 = document.getElementById('playPause2');
             const volume2 = document.getElementById('volume2');
 

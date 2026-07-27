@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Memories</title>
+    <style>
+        /* =================================================================
+           RESET & ESTILOS GLOBAIS (Estética One Direction & Carta Orgânica)
+           =================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent-red: #d32f2f;
+            --dark-red: #8a0303;
+            --bg-black: #060606;
+            --card-surface: #101010;
+            --pure-white: #f5f5f5;
+            --text-muted: #9e9e9e;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            
+            /* Variáveis da Folha de Papel Bege com recortes orgânicos */
+            --paper-bg: #f4ecdc;
+            --paper-text: #2c241d;
+            --paper-shadow: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Importação de fontes estéticas (Rock Salt para títulos e Special Elite para cartas) */
+        @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&family=Special+Elite&display=swap');
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-black);
+            color: var(--pure-white);
+            overflow: hidden;
+            font-family: 'Special Elite', monospace;
+        }
+
+        /* Película de grão analógico cinematográfica */
+        .film-grain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* =================================================================
+           SISTEMA DE PÁGINAS E TRANSIÇÕES FLUIDAS (Blur, Fade & Zoom)
+           =================================================================== */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            z-index: 2;
+            opacity: 0;
+            visibility: hidden;
+            filter: blur(8px);
+            transform: scale(0.96);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                        filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            filter: blur(0);
+            transform: scale(1);
+        }
+
+        .page.exit {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(1.04);
+        }
+
+        /* =================================================================
+           BOTÃO DE VOLTAR (Seta Estilizada)
+           =================================================================== */
+        .back-page-btn {
+            position: absolute;
+            top: 30px;
+            left: 35px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .back-page-btn:hover {
+            color: var(--pure-white);
+            opacity: 1;
+            text-shadow: 0 0 10px var(--accent-red);
+            transform: translateX(-3px);
+        }
+
+        /* =================================================================
+           PÁGINA 1: TELA INICIAL
+           =================================================================== */
+        .logo-wrapper {
+            position: relative;
+            margin-bottom: 35px;
+            filter: drop-shadow(0 10px 25px rgba(211, 47, 47, 0.25));
+        }
+
+        .editorial-ribbon {
+            position: absolute;
+            top: -15px;
+            right: -25px;
+            background-color: var(--accent-red);
+            color: var(--pure-white);
+            padding: 6px 16px;
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.75rem;
+            transform: rotate(4deg);
+            z-index: 3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .logo-container {
+            width: 190px;
+            height: 190px;
+            position: relative;
+            border: 4px solid var(--pure-white);
+            background: var(--card-surface);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        .welcome-text {
+            font-family: 'Rock Salt', cursive;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--pure-white);
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .btn-editorial {
+            background: var(--accent-red);
+            color: var(--pure-white);
+            border: 2px solid var(--pure-white);
+            padding: 14px 45px;
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-editorial:hover {
+            background: var(--pure-white);
+            color: var(--bg-black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        /* =================================================================
+           FOTOS DECORATIVAS E DOS MEMBROS (Página 2)
+           =================================================================== */
+        .decora-img {
+            position: absolute;
+            width: 140px;
+            height: 170px;
+            background: #fff;
+            padding: 8px 8px 24px 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            z-index: 1;
+            display: none;
+        }
+
+        .decora-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(10%) contrast(105%);
+        }
+
+        .foto-1 { top: 6%; left: 2%; transform: rotate(-8deg); }
+        .foto-2 { top: 37%; left: 1%; transform: rotate(5deg); }
+        .foto-3 { bottom: 6%; left: 3%; transform: rotate(-5deg); }
+        .foto-4 { top: 8%; right: 2%; transform: rotate(9deg); }
+        .foto-5 { top: 39%; right: 1%; transform: rotate(-6deg); }
+        .foto-6 { bottom: 8%; right: 3%; transform: rotate(7deg); }
+
+        .decora-img.membro-1, 
+        .decora-img.membro-2 {
+            position: absolute;
+            width: 260px;
+            height: 420px;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            z-index: 3;
+            display: none;
+        }
+
+        .decora-img.membro-1 img, 
+        .decora-img.membro-2 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            filter: grayscale(10%) contrast(105%);
+        }
+
+        .membro-1 {
+            top: 22%;  
+            left: 14%;
+            transform: rotate(-3deg);
+        }
+
+        .membro-2 {
+            top: 22%;  
+            right: 14%;
+            transform: rotate(3deg);
+        }
+
+        @media (min-width: 1100px) {
+            .decora-img.membro-1,
+            .decora-img.membro-2 {
+                display: block;
+            }
+        }
+
+        .letter-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 700px;
+            height: 58vh;
+            margin-bottom: 20px;
+            z-index: 2;
+        }
+
+        .letter-container {
+            width: 100%;
+            height: 100%;
+            background-color: var(--paper-bg);
+            color: var(--paper-text);
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            border: 2px solid #d4c5ab;
+            padding: 50px 45px;
+            box-shadow: 0 25px 50px var(--paper-shadow);
+            position: relative;
+            overflow-y: auto;
+            transform: rotate(-0.5deg);
+        }
+
+        .letter-container::-webkit-scrollbar { width: 6px; }
+        .letter-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.04); }
+        .letter-container::-webkit-scrollbar-thumb { background: #b5a48b; border-radius: 3px; }
+
+        .letter-content {
+            font-size: 1rem;
+            line-height: 1.9;
+            white-space: pre-line;
+        }
+
+        .audio-player-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(15, 15, 15, 0.9);
+            padding: 10px 22px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+
+        .player-btn {
+            background: none;
+            border: none;
+            color: var(--pure-white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+        .player-btn:hover { color: var(--accent-red); }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .volume-control input[type="range"] {
+            width: 75px;
+            accent-color: var(--accent-red);
+            cursor: pointer;
+        }
+
+        .next-page-btn {
+            display: block;
+            margin: 40px auto 10px auto;
+            background: #2c241d;
+            color: var(--paper-bg);
+            border: 2px dashed #b5a48b;
+            padding: 12px 25px;
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        }
+
+        .next-page-btn:hover {
+            background: var(--accent-red);
+            color: var(--pure-white);
+            border-color: var(--pure-white);
+            transform: scale(1.02);
+        }
+
+        /* =================================================================
+           PÁGINA 3: IMAGEM CINEMATOGRÁFICA E PLAYER 2
+           =================================================================== */
+        .image-showcase {
+            width: 85vw;
+            max-width: 480px;
+            height: 44vh;
+            border: 1px solid var(--border-subtle);
+            border-bottom: 4px solid var(--accent-red);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(211, 47, 47, 0.15);
+            position: relative;
+            overflow: hidden;
+            background: var(--card-surface);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-showcase img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(105%) saturate(90%);
+        }
+
+        @media (min-width: 950px) {
+            .decora-img {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo-container { width: 150px; height: 150px; }
+            .welcome-text { font-size: 1.1rem; }
+            .letter-wrapper { width: 92%; height: 52vh; }
+            .letter-container { padding: 30px 20px; border-radius: 30px 10px 30px 10px; }
+            .image-showcase { width: 90vw; height: 38vh; }
+            .back-page-btn { top: 20px; left: 20px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="film-grain"></div>
+
+    <!-- ================================================================= -->
+    <!-- PÁGINA 1: TELA INICIAL                                            -->
+    <!-- ================================================================= -->
+    <section id="page1" class="page active">
+        <div class="logo-wrapper">
+            <div class="editorial-ribbon">Madu Aprontou</div>
+            <div class="logo-container">
+                <img src="imagem1.jpg" alt="Logo">
+            </div>
+        </div>
+        
+        <div class="welcome-text">Você recebeu uma carta</div>
+        
+        <button class="btn-editorial" id="openBtn">ABRIR</button>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- PÁGINA 2: A CARTA, PLAYER 1 E AS 4 FOTOS DECORATIVAS              -->
+    <!-- ================================================================= -->
+    <section id="page2" class="page">
+        <button class="back-page-btn" id="backToPage1">
+            &larr; Voltar
+        </button>
+
+        <div class="decora-img foto-1">
+            <img src="foto1.jpg" alt="Decoração 1">
+        </div>
+        <div class="decora-img foto-2">
+            <img src="foto2.png" alt="Decoração 2">
+        </div>
+        <div class="decora-img foto-3">
+            <img src="foto3.png" alt="Decoração 3">
+        </div>
+        <div class="decora-img foto-4">
+            <img src="foto4.png" alt="Decoração 4">
+        </div>
+        <div class="decora-img foto-5">
+            <img src="foto5.jpg" alt="Decoração 5">
+        </div>
+        <div class="decora-img foto-6">
+            <img src="foto6.jpg" alt="Decoração 6">
+        </div>
+        
+        <div class="decora-img membro-1">
+            <img src="membro1.jpeg" alt="Membro 1">
+        </div>
+        <div class="decora-img membro-2">
+            <img src="membro2.jpeg" alt="Membro 2">
+        </div>
+      
+        <div class="letter-wrapper">
+            <div class="letter-container">
+                <div class="letter-content" id="letterText">Oii Minha Ruiva
+
+Quando começamos a conversar, eu não dava uma semana para a gente parar de se falar. Eu jurava que seria mais uma conversa qualquer, mais uma pessoa que passaria pela minha vida como tantas outras passaram. Eu tinha certeza que em poucos dias o silêncio ia se instalar entre a gente, como sempre acontecia. Mas algo em mim despertava cada vez que eu recebia uma mensagem sua – e isso me assustava profundamente. Eu tinha medo do que aquilo significava, porque nunca senti algo assim antes. Era como se meu coração soubesse de algo que minha mente ainda se recusava a aceitar.
+
+Depois da nossa primeira ligação, eu não te contei, mas passei a noite em claro. Fiquei deitada, olhando pro teto, revivendo cada palavra sua, cada tom de voz, cada pausa, cada risada. Eu senti coisas que nunca pensei que poderia sentir com alguém. Foi naquela noite que eu entendi que você não era qualquer pessoa. Foi naquela noite que eu percebi que algo em mim estava mudando, e eu não sabia se estava pronta. Foi também naquele dia que eu repeti pra mim mesma a minha frase: "Deus é pai, não é padrasto". Como se Ele estivesse me mostrando que o que estava vindo era bom, era certo, era feito sob medida pra mim.
+
+E foi assim, sem eu perceber, que o amor chegou. Ele veio como uma brisa suave, despercebido, quase tímido. E brotou como uma flor desabrochando dentro de mim – devagar, mas com uma força que eu não sabia que existia. "You don't know you're beautiful, that's what makes you beautiful" – e é exatamente assim que eu me sinto quando olho pra você: como se eu fosse bonita, suficiente, inteira, só por existir aos seus olhos. Você me faz sentir que eu não preciso ser mais do que sou.
+
+Com você, aprendi que não é errado mostrar meu lado frágil. Que tudo bem não estar bem o tempo todo. Que tudo bem chorar. Que tudo bem dizer "eu não tô bem" medo de ser julgada ou abandonada. Eu nunca chorei na frente de ninguém. Guardei tanta coisa dentro de mim por tantos anos que achei que fosse explodir. Mas com você, eu sinto uma paz tão grande que posso ser inteiramente eu mesma – com minhas dores, minhas inseguranças, meus medos, meus silêncios, meus gritos abafados. Você me deu um lugar onde eu posso simplesmente ser, sem máscaras, sem defesas, sem precisar provar nada. "And if you're ever feeling down, I'll be your window pane" – porque é isso que você é pra mim: a janela por onde a luz entra nos meus dias mais escuros.
+
+Sabe, eu nunca me senti pertencente a lugar nenhum. A vida inteira parecia que eu não cabia em lugar algum, como se eu estivesse sempre sobrando ou sempre faltando, como se eu fosse um pedaço de quebra-cabeça que não encaixa em nenhuma montagem. Eu vaguei por tanto tempo procurando um lugar onde minhas raízes pudessem finalmente se firmar. Mas de repente, a palavra "lar" ganhou nome, endereço e a cor do cabelo ruivo mais lindo que eu poderia imaginar. Você virou minha casa. Você virou meu chão. Você virou o lugar onde eu posso finalmente descansar. "I don't know where I'm going, but I know it's gonna be you" – e é isso: mesmo sem saber o caminho, eu sei que o destino é você.
+
+Meus planos agora não são mais sozinhos. Tem alguém que participa de todos eles, e meus dias ganharam um novo significado. Antes, eu vivia no automático: acordar, existir, sobreviver, dormir, repetir. Agora, eu acordo pensando em você. Agora, cada dia tem um propósito: chegar mais perto de você, construir algo com você, sonhar com você. "I want to write you a song, one to make your heart remember me" – porque é isso que você faz: você fica gravada em cada parte de mim, em cada verso que eu respiro, em cada batida do meu coração.
+
+É olhando pro seu sorriso que encontro motivação pra me tornar cada dia melhor. É pensando em você que eu quero lutar, crescer, ser mais forte, ser mais gentil, ser mais paciente. É por você que eu quero acordar cedo, enfrentar o mundo, e correr atrás dos meus sonhos – porque agora meus sonhos têm o seu rosto. Eu quero que logo, logo a gente esteja juntas – na nossa casa, muito bem decorada, com nossa história estampada em cada parede, e com uma cacatua rosa fazendo barulho pela manhã. Eu quero dividir o café, o silêncio, a bagunça, a vida. Eu quero tudo com você. "You and me, we got a whole lot of history" – e eu quero continuar escrevendo cada capítulo ao seu lado.
+
+Aprendi que tem alguém esperando pra ouvir minha voz. Aprendi que tem alguém que realmente se importa com o que eu tenho a dizer. Que não é só mais uma conversa vazia, mas que cada palavra minha é guardada com carinho. E mais do que nunca, eu tenho alguém que eu penso todo dia, que eu amo a cada batida do meu coração – e olha que meu coração já bateu por tantas coisas erradas, mas agora ele encontrou o ritmo certo: o ritmo do seu nome.
+
+Você tem os olhos mais lindos que já vi. O sorriso bobo mais apaixonante. O olhar mais cativante. E a voz que faz meu coração errar as batidas – como se ele esquecesse como funciona só de ouvir você falar. "You're insecure, don't know what for, you're turning heads when you walk through the door" – mas você nem precisa fazer esforço, porque você já é a pessoa mais incrível que eu já conheci. Você é a música que eu quero ouvir em loop, o filme que eu quero assistir todo dia, o livro que eu quero reler até decorar cada página.
+
+Tenho orgulho de chamar você de minha namorada. Me sinto sortuda todos os dias por ter você ao meu lado – e olha que eu nunca fui de acreditar em sorte, mas você me fez acreditar que o acaso pode ter a mão mais cuidadosa do mundo. Você é inteligente, taletosa, intensa, profunda, interessante, cativante e se tornou meu sinônimo de paz. "If you're lost, just look for me and you'll find me in the region of the summer stars" – porque é pra onde você me leva toda vez que eu olho nos seus olhos: pra um lugar onde tudo faz sentido, onde o tempo para, onde o mundo desaparece e só existe você.
+
+Eu quero que você saiba que você é o meu "something great". Minha história favorita. Minha música preferida. O meu "finally" depois de tanto "maybe". Você é a resposta que eu passei anos procurando sem saber qual era a pergunta. Eu te amo de verdade – com todas as letras, com todos os versos, com todas as batidas do meu coração. Eu te amo de um jeito que eu nunca soube que era possível amar alguém. "I love you more than words can say" – e olha que eu tô tentando com todas as palavras do mundo, mas ainda assim parece pouco.
+
+E se um dia você duvidar, se um dia o medo bater na sua porta, se um dia você achar que não é suficiente: lembre-se de mim. Lembre-se de que pra minY você é tudo. Lembre-se de que você é a primeira pessoa que me fez querer ficar. A primeira que me fez acreditar que o amor não precisa doer. Lembre-se de que você é a minha paz, o meu lar, a minha canção. "That's what makes you beautiful" – e não é a aparência, não é o cabelo ruivo, não é o sorriso – é você. É a sua alma. É o jeito que você me olha. É o jeito que você me faz sentir que eu finalmente cheguei em casa.
+
+Com todo o meu amor,
+Sua. 🖤</div>
+
+                <button class="next-page-btn" id="goToPage3">
+                    Achou que era só isso? &rarr;
+                </button>
+            </div>
+        </div>
+
+        <div class="audio-player-container">
+            <button class="player-btn" id="playPause1">▶</button>
+            <div class="volume-control">
+                <span>VOL</span>
+                <input type="range" id="volume1" min="0" max="1" step="0.05" value="0.7">
+            </div>
+        </div>
+
+        <audio id="musica1" loop>
+            <source src="musica1.mp3" type="audio/mpeg">
+        </audio>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- PÁGINA 3: IMAGEM FINAL E PLAYER 2                                 -->
+    <!-- ================================================================= -->
+    <section id="page3" class="page">
+        <button class="back-page-btn" id="backToPage2">
+            &larr; Voltar
+        </button>
+
+        <div class="image-showcase">
+            <img src="imagem3.jpeg" alt="Momento Especial">
+        </div>
+
+        <div class="audio-player-container">
+            <button class="player-btn" id="playPause2">▶</button>
+            <div class="volume-control">
+                <span>VOL</span>
+                <input type="range" id="volume2" min="0" max="1" step="0.05" value="0.7">
+            </div>
+        </div>
+
+        <audio id="musica2" loop>
+            <source src="you_an_i_ofc.mp3" type="audio/mpeg">
+        </audio>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT: CONTROLE DE TRANSIÇÕES E ÁUDIOS                       -->
+    <!-- ================================================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            const page3 = document.getElementById('page3');
+            
+            const openBtn = document.getElementById('openBtn');
+            const goToPage3 = document.getElementById('goToPage3');
+            const backToPage1 = document.getElementById('backToPage1');
+            const backToPage2 = document.getElementById('backToPage2');
+
+            const musica1 = document.getElementById('musica1');
+            const musica2 = document.getElementById('musica2');
+
+            musica1.volume = 0.7;
+            musica2.volume = 0.7;
+
+            function switchPage(current, next) {
+                current.classList.add('exit');
+                current.classList.remove('active');
+                
+                setTimeout(() => {
+                    current.classList.remove('exit');
+                    next.classList.add('active');
+                }, 500);
+            }
+
+            // Página 1 -> Página 2
+            openBtn.addEventListener('click', () => {
+                switchPage(page1, page2);
+                musica1.play().then(() => {
+                    playPause1.textContent = '⏸';
+                }).catch(e => {
+                    console.log("Autoplay restrito pelo navegador.", e);
+                });
+            });
+
+            // Página 2 -> Página 1 (Voltar)
+            backToPage1.addEventListener('click', () => {
+                musica1.pause();
+                musica1.currentTime = 0;
+                playPause1.textContent = '▶';
+                switchPage(page2, page1);
+            });
+
+            // Página 2 -> Página 3
+            goToPage3.addEventListener('click', () => {
+                musica1.pause();
+                musica1.currentTime = 0;
+                playPause1.textContent = '▶';
+
+                switchPage(page2, page3);
+
+                musica2.play().then(() => {
+                    playPause2.textContent = '⏸';
+                }).catch(e => {
+                    console.log("Autoplay restrito pelo navegador.", e);
+                });
+            });
+
+            // Página 3 -> Página 2 (Voltar)
+            backToPage2.addEventListener('click', () => {
+                musica2.pause();
+                musica2.currentTime = 0;
+                playPause2.textContent = '▶';
+
+                switchPage(page3, page2);
+
+                musica1.play().then(() => {
+                    playPause1.textContent = '⏸';
+                }).catch(e => {
+                    console.log("Autoplay restrito pelo navegador.", e);
+                });
+            });
+
+            // Controles de Áudio 1
+            const playPause1 = document.getElementById('playPause1');
+            const volume1 = document.getElementById('volume1');
+
+            playPause1.addEventListener('click', () => {
+                if (musica1.paused) {
+                    musica1.play();
+                    playPause1.textContent = '⏸';
+                } else {
+                    musica1.pause();
+                    playPause1.textContent = '▶';
+                }
+            });
+
+            volume1.addEventListener('input', (e) => {
+                musica1.volume = e.target.value;
+            });
+
+            // Controles de Áudio 2
+            const playPause2 = document.getElementById('playPause2');
+            const volume2 = document.getElementById('volume2');
+
+            playPause2.addEventListener('click', () => {
+                if (musica2.paused) {
+                    musica2.play();
+                    playPause2.textContent = '⏸';
+                } else {
+                    musica2.pause();
+                    playPause2.textContent = '▶';
+                }
+            });
+
+            volume2.addEventListener('input', (e) => {
+                musica2.volume = e.target.value;
+            });
+        });
+    </script>
+</body>
+</html>
